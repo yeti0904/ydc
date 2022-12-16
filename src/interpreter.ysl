@@ -1,0 +1,58 @@
+interpreter_init:
+	var interpreter_stack = 0
+	var interpreter_stack r 0 1
+
+	# instruction constants
+	var INTERPRETER_INSTRUCTION_ADD = &+
+	var INTERPRETER_INSTRUCTION_SUB = &-
+	var INTERPRETER_INSTRUCTION_MUL = &*
+	var INTERPRETER_INSTRUCTION_DIV = &/
+	var INTERPRETER_INSTRUCTION_P   = &p
+	var INTERPRETER_INSTRUCTION_V   = &v
+	return
+
+interpreter_interpret:
+	var interpreter_tokens p
+	var interpreter_tokens c !interpreter_tokens
+	size interpreter_tokens
+	var interpreter_tokenCount f return
+	var interpreter_i = 0
+	.loop:
+		var interpreter_current f interpreter_tokens $interpreter_i
+		cmp $interpreter_current $LEXER_TOKENTYPE_NUMBER
+		goto_if *.numberToken
+		cmp $interpreter_current $LEXER_TOKENTYPE_MISC
+		goto_if *.miscToken
+		println "Error: unknown token type" $interpreter_current
+		exit
+	.numberToken:
+		var interpreter_i + 1
+		var interpreter_current f interpreter_tokens $interpreter_i
+		var interpreter_stack a $interpreter_current
+		#println "Pushed" $interpreter_current
+		goto *.continue
+	.miscToken:
+		#println "Misc"
+		var interpreter_i + 1
+		var interpreter_current f interpreter_tokens $interpreter_i
+		cmp $interpreter_current $INTERPRETER_INSTRUCTION_ADD
+		gosub_if *builtins_add
+		cmp $interpreter_current $INTERPRETER_INSTRUCTION_SUB
+		gosub_if *builtins_sub
+		cmp $interpreter_current $INTERPRETER_INSTRUCTION_MUL
+		gosub_if *builtins_mul
+		cmp $interpreter_current $INTERPRETER_INSTRUCTION_DIV
+		gosub_if *builtins_div
+		cmp $interpreter_current $INTERPRETER_INSTRUCTION_P
+		gosub_if *builtins_p
+		cmp $interpreter_current $INTERPRETER_INSTRUCTION_V
+		gosub_if *builtins_v
+		goto *.continue
+	.continue:
+		var interpreter_i + 1
+		lt $interpreter_i $interpreter_tokenCount
+		not
+		goto_if *.done
+		goto *.loop
+	.done:
+		return

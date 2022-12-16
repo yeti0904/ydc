@@ -1,0 +1,15 @@
+util_popFromArray:
+	var popFromArray_varname p
+	var popFromArray_variable c !popFromArray_varname
+	size popFromArray_variable
+	var popFromArray_variableSize f return
+	cmp $popFromArray_variableSize 0
+	goto_if *.stackOverflow
+	var popFromArray_variableSize - 1
+	var popFromArray_ret f popFromArray_variable $popFromArray_variableSize
+	var popFromArray_variable r $popFromArray_variableSize 1
+	var !popFromArray_varname c popFromArray_variable
+	return popFromArray_ret
+	.stackOverflow:
+		println "Error: https://stackoverflow.com"
+		error

@@ -1,0 +1,17 @@
+load_end "src/util.ysl"
+load_end "src/lexer.ysl"
+load_end "src/builtins.ysl"
+load_end "src/interpreter.ysl"
+gosub *lexer_init
+gosub *interpreter_init
+
+program:
+	print "> "
+	file.flush
+	input
+	var in c return
+	var in a 32
+	gosub *lexer_lex in
+	var tokens c return
+	gosub *interpreter_interpret tokens
+	goto *program

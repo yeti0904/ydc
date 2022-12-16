@@ -1,0 +1,58 @@
+builtins_add:
+	gosub *util_popFromArray interpreter_stack
+	var builtins_add_second f return
+	
+	gosub *util_popFromArray interpreter_stack
+	var builtins_add_first f return
+	
+	var builtins_add_first + $builtins_add_second
+	var interpreter_stack a $builtins_add_first
+	return
+
+builtins_sub:
+	gosub *util_popFromArray interpreter_stack
+	var builtins_sub_second f return
+	
+	gosub *util_popFromArray interpreter_stack
+	var builtins_sub_first f return
+	
+	var builtins_sub_first - $builtins_sub_second
+	var interpreter_stack a $builtins_sub_first
+	return
+
+builtins_mul:
+	gosub *util_popFromArray interpreter_stack
+	var builtins_mul_second f return
+	
+	gosub *util_popFromArray interpreter_stack
+	var builtins_mul_first f return
+	
+	var builtins_mul_first * $builtins_mul_second
+	var interpreter_stack a $builtins_mul_first
+	return
+
+builtins_div:
+	gosub *util_popFromArray interpreter_stack
+	var builtins_div_second f return
+	
+	gosub *util_popFromArray interpreter_stack
+	var builtins_div_first f return
+	
+	var builtins_div_first / $builtins_div_second
+	var interpreter_stack a $builtins_div_first
+	return
+
+builtins_v:
+	gosub *util_popFromArray interpreter_stack
+	var builtins_v_arg f return
+
+	sqrt $builtins_v_arg
+	var builtins_v_res f return
+	var interpreter_stack a $builtins_v_res
+	return
+
+builtins_p:
+	gosub *util_popFromArray interpreter_stack
+	var builtins_p_value f return
+	println $builtins_p_value
+	return

@@ -1,0 +1,49 @@
+lexer_init:
+	var LEXER_TOKENTYPE_NUMBER = 65
+	var LEXER_TOKENTYPE_STRING = 66
+	# misc can be either an instruction or a parameter
+	var LEXER_TOKENTYPE_MISC   = 67
+	return
+
+lexer_lex:
+	var lexer_ret = 0
+	var lexer_ret r 0 1
+	var lexer_input p
+	var lexer_input c !lexer_input
+	size lexer_input
+	var lexer_input_len f return
+	var lexer_reading = ""
+	var lexer_i = 0
+
+	#println "'" !lexer_input "'"
+	.loop:
+		var lexer_currentChar f lexer_input $lexer_i
+		cmp !lexer_currentChar " "
+		goto_if *.spaceChar
+		is_num !lexer_currentChar
+		goto_if *.addNumerical
+		# it's an instruction
+		var lexer_ret a $LEXER_TOKENTYPE_MISC
+		var lexer_ret a $lexer_currentChar
+	.addNumerical:
+		var lexer_reading a $lexer_currentChar
+		goto *.continue
+	.spaceChar:
+		is_num !lexer_reading
+		goto_if *.addNumber
+		goto *.continue
+	.addNumber:
+		var lexer_ret a $LEXER_TOKENTYPE_NUMBER
+		atoi !lexer_reading
+		var lexer_addNumber_tmp f return
+		var lexer_ret a $lexer_addNumber_tmp
+		var lexer_reading = ""
+		goto *.continue
+	.continue:
+		#println $lexer_input_len
+		var lexer_i + 1
+		cmp $lexer_i $lexer_input_len
+		goto_if *.done
+		goto *.loop
+	.done:
+		return lexer_ret
